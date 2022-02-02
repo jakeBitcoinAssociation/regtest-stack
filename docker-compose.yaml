@@ -4,9 +4,6 @@ services:
   node1:
     container_name: node1
     image: bitcoinsv/bitcoin-sv:1.0.8
-    stdin_open: true
-    tty: true
-    command: ["CMD", "bitcoind&", "/bin/bash"]
     expose:
       - "18332"
       - "18333"
@@ -18,6 +15,7 @@ services:
     healthcheck:
       test: [ "CMD", "/entrypoint.sh", "bitcoin-cli", "getinfo" ]
     volumes:
+      - ./sv/bitcoin.conf:/data/bitcoin.conf
       - ./sv/bitcoin.conf:/root/.bitcoin/bitcoin.conf
       - regtest-data:/data
 

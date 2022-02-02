@@ -11,7 +11,7 @@ This repository contains `dockerfile`s and a `docker-compose` configuration to r
 1. Clone this repository
 2. Check and modify `docker-compose.yaml` to set the desired SV Node version (`services/sv/args/VERSION` element). Also check the `sv/build` script if you manually build just that image
 3. `docker-compose up -d`
-4. `docker container attach node1`
+4. `docker container exec node1 [RPC command]`
 
 To list the available RPC commands, run:
 
