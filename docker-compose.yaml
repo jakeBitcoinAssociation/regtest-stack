@@ -10,7 +10,9 @@ services:
       - "8080:8080"
       - "3010:3000"
     restart: unless-stopped
-    command: /bin/bash
+    command: /bin/bash -c "apt-get update
+      && apt-get install procps
+      && bitcoind&"
     healthcheck:
       test: [ "CMD", "/entrypoint.sh", "bitcoin-cli", "getinfo" ]
     volumes:
