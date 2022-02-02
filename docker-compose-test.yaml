@@ -6,15 +6,8 @@ services:
     image: bitcoinsv/bitcoin-sv:1.0.8
     stdin_open: true
     tty: true
-    command: ["CMD", "bitcoind&", "/bin/bash"]
-    expose:
-      - "18332"
-      - "18333"
-      - "28332"
-    ports:
-      - "18332:18332"
-      - "28332:28332"
     restart: unless-stopped
+    command: /bin/bash
     healthcheck:
       test: [ "CMD", "/entrypoint.sh", "bitcoin-cli", "getinfo" ]
     volumes:
@@ -31,8 +24,6 @@ services:
         },
         "network": "regtest"
         }'
-    ports:
-      - "9012:9002"
     restart: unless-stopped
     depends_on:
       - node1
@@ -47,9 +38,7 @@ services:
     environment:
       POSTGRES_PASSWORD: postgres
     volumes:
-     - mapi-volume:/var/lib/postgresql/data
-    ports:
-      - "5433:5432"
+      - mapi-volume:/var/lib/postgresql/data
 
   mapi:
     container_name: mapi
@@ -91,8 +80,6 @@ services:
       - ASPNETCORE_HTTPS_PORT=9014
       - ASPNETCORE_Kestrel__Certificates__Default__Password=pass
       - ASPNETCORE_Kestrel__Certificates__Default__Path=/config/localhost.pfx
-    ports:
-      - "9014:80"
     restart: unless-stopped
     volumes:
       - ./mapi/config:/config/:ro
@@ -114,12 +101,10 @@ services:
   explorer:
     container_name: explorer
     image: jwahab/woc-explorer:latest
-    environment:
-      PORT: "8080"
-    expose:
-      - "8080"
     ports:
       - "8080:8080"
+    environment:
+      PORT: 8080
     restart: unless-stopped
     depends_on:
       - node1
@@ -127,14 +112,14 @@ services:
   dash:
     container_name: dash
     image: jwahab/regtest-dashboard:latest
+    ports:
+      - "3010:3000"
     environment:
       DASH_PORT: 3000
       SV_HOST: node1
       SV_PORT: 18332
       SV_USER: bitcoin
       SV_PASSWORD: bitcoin
-    ports:
-      - "3010:3000"
     restart: unless-stopped
     depends_on:
       - node1
